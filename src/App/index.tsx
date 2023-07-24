@@ -1,82 +1,85 @@
-import { useState, useEffect, MouseEvent, ChangeEvent, useCallback } from 'react';
+import { useEffect, MouseEvent, ChangeEvent, useCallback } from 'react';
 import ReactFlow, { Controls, addEdge, Node, ReactFlowInstance, Position, SnapGrid, Connection, useNodesState, useEdgesState } from 'reactflow';
 
-import ColorSelectorNode from './ColorSelectorNode';
+import MessagetNode from './MessageNode';
+import SmartContractNode from './SmartContractNode';
 
-const onInit = (reactFlowInstance: ReactFlowInstance) => {
-  console.log('flow loaded:', reactFlowInstance);
-};
 
-const onNodeDragStop = (_: MouseEvent, node: Node) => console.log('drag stop', node);
-const onNodeClick = (_: MouseEvent, node: Node) => console.log('click', node);
 
-const initBgColor = '#1A192B';
+const onNodeDragStop = (_: MouseEvent, node: Node) => {};
+const onNodeClick = (_: MouseEvent, node: Node) => {};
 
-const connectionLineStyle = { stroke: '#fff' };
 const snapGrid: SnapGrid = [16, 16];
 
 const nodeTypes = {
-  selectorNode: ColorSelectorNode
+  messageNode:MessagetNode,
+  contractNode: SmartContractNode
 };
 
 const App = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const [bgColor, setBgColor] = useState<string>(initBgColor);
-
-  useEffect(() => {
-    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id !== '2') {
-            return node;
-          }
-
-          const color = event.target.value;
-
-          setBgColor(color);
-
-          return {
-            ...node,
-            data: {
+  const onOutput = (result:any)=>{    
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.type === 'output') {
+          return {...node,
+            data:{
               ...node.data,
-              color
+              label:JSON.stringify(result)
             }
           };
-        })
-      );
-    };
+        }                
+
+        return node;
+      
+      })
+    );
+  }
+
+  const onChange = (value:string) => {    
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.type === 'output') {
+          return node;
+        }                
+
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            value
+          }
+        };
+      
+      })
+    );
+  };
+
+  useEffect(() => {
+    
 
     setNodes([
       {
         id: '1',
-        type: 'input',
-        data: { label: 'An input node' },
-        position: { x: 0, y: 50 },
-        sourcePosition: Position.Right
+        type: 'messageNode',
+        data: { onChange:(event: ChangeEvent<HTMLInputElement>)=>onChange(event.target.value) },      
+        position: { x: 0, y: 50 },        
       },
       {
         id: '2',
-        type: 'selectorNode',
-        data: { onChange: onChange, color: initBgColor },
+        type: 'contractNode',
+        data: { onOutput:onOutput },
         style: { border: '1px solid #777', padding: 10 },
-        position: { x: 250, y: 50 }
+        position: { x: 250, y: 50 },        
       },
       {
         id: '3',
         type: 'output',
-        data: { label: 'Output A' },
-        position: { x: 550, y: 25 },
-        targetPosition: Position.Left
-      },
-      {
-        id: '4',
-        type: 'output',
-        data: { label: 'Output B' },
-        position: { x: 550, y: 100 },
-        targetPosition: Position.Left
-      }
+        data: {  },
+        position: { x: 550, y: 250 },        
+      },    
     ]);
 
     setEdges([
@@ -84,24 +87,15 @@ const App = () => {
         id: 'e1-2',
         source: '1',
         target: '2',
-        animated: true,
-        style: { stroke: '#fff' }
-      },
-      {
-        id: 'e2a-3',
-        source: '2',
         sourceHandle: 'a',
-        target: '3',
-        animated: true,
-        style: { stroke: '#fff' }
-      },
+        animated: true,        
+      },    
       {
         id: 'e2b-4',
         source: '2',
-        sourceHandle: 'b',
-        target: '4',
-        animated: true,
-        style: { stroke: '#fff' }
+        target: '3',
+        sourceHandle: 'b',        
+        animated: true,        
       }
     ]);
   }, []);
@@ -116,11 +110,11 @@ const App = () => {
       onEdgesChange={onEdgesChange}
       onNodeClick={onNodeClick}
       onConnect={onConnect}
-      onNodeDragStop={onNodeDragStop}
-      style={{ background: bgColor }}
-      onInit={onInit}
-      nodeTypes={nodeTypes}
-      connectionLineStyle={connectionLineStyle}
+      onNodeDragStop={onNodeDragStop}      
+      onInit={(reactFlowInstance: ReactFlowInstance) => {
+        onChange(`{"decimals": 6, "name": "cw20 orai", "symbol": "orai", "initial_balances": [ { "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv", "amount": "10000000" } ] }`)
+      }}
+      nodeTypes={nodeTypes}      
       snapToGrid={true}
       snapGrid={snapGrid}
       fitView
