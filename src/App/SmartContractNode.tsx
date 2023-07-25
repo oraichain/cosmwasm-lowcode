@@ -9,7 +9,7 @@ const SmartContractNode: FC<NodeProps> = ({ data, isConnectable }) => {
       try {
         const msg = JSON.parse(data.value);
         (async () => {
-          data.onOutput(await window.tokenContract.balance(msg));
+          data.onOutput(await window.client.queryContractSmart(window.tokenContract.contractAddress, msg));
         })();
       } catch (ex) {
         console.log(ex);

@@ -112,7 +112,7 @@ const App = () => {
       onConnect={onConnect}
       onNodeDragStop={onNodeDragStop}      
       onInit={(reactFlowInstance: ReactFlowInstance) => {
-        onChange(`{ "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv" }`)
+        onChange(`{"balance":{ "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv" }}`)
       }}
       nodeTypes={nodeTypes}      
       snapToGrid={true}
