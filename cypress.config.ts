@@ -6,14 +6,14 @@ export default defineConfig({
     viewportWidth: 1280,
     viewportHeight: 720,
     video: false,
-    screenshotOnRunFailure: false,
+    screenshotOnRunFailure: false
   },
   component: {
     devServer: {
       framework: 'react',
-      bundler: 'vite',
+      bundler: 'vite'
     },
     screenshotOnRunFailure: false,
-    video: false,
-  },
+    video: false
+  }
 });
