@@ -1,5 +1,5 @@
-import { useEffect, MouseEvent, ChangeEvent, useCallback } from 'react';
-import ReactFlow, { Controls, addEdge, Node, ReactFlowInstance, Position, SnapGrid, Connection, useNodesState, useEdgesState } from 'reactflow';
+import { ChangeEvent, MouseEvent, useCallback, useEffect } from 'react';
+import ReactFlow, { addEdge, Connection, Controls, Node, ReactFlowInstance, SnapGrid, useEdgesState, useNodesState } from 'reactflow';
 
 import MessagetNode from './MessageNode';
 import SmartContractNode from './SmartContractNode';
@@ -112,7 +112,7 @@ const App = () => {
       onConnect={onConnect}
       onNodeDragStop={onNodeDragStop}      
       onInit={(reactFlowInstance: ReactFlowInstance) => {
-        onChange(`{"decimals": 6, "name": "cw20 orai", "symbol": "orai", "initial_balances": [ { "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv", "amount": "10000000" } ] }`)
+        onChange(`{ "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv" }`)
       }}
       nodeTypes={nodeTypes}      
       snapToGrid={true}
