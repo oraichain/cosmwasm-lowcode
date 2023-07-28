@@ -4,46 +4,44 @@ import ReactFlow, { addEdge, Connection, Controls, Node, ReactFlowInstance, Snap
 import MessagetNode from './MessageNode';
 import SmartContractNode from './SmartContractNode';
 
-
-
 const onNodeDragStop = (_: MouseEvent, node: Node) => {};
 const onNodeClick = (_: MouseEvent, node: Node) => {};
 
 const snapGrid: SnapGrid = [16, 16];
 
 const nodeTypes = {
-  messageNode:MessagetNode,
+  messageNode: MessagetNode,
   contractNode: SmartContractNode
 };
 
-const App = () => {
+const App = ({ title }: { title: string }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const onOutput = (result:any)=>{    
+  const onOutput = (result: any) => {
     setNodes((nds) =>
       nds.map((node) => {
         if (node.type === 'output') {
-          return {...node,
-            data:{
+          return {
+            ...node,
+            data: {
               ...node.data,
-              label:JSON.stringify(result)
+              label: JSON.stringify(result)
             }
           };
-        }                
+        }
 
         return node;
-      
       })
     );
-  }
+  };
 
-  const onChange = (value:string) => {    
+  const onChange = (value: string) => {
     setNodes((nds) =>
       nds.map((node) => {
         if (node.type === 'output') {
           return node;
-        }                
+        }
 
         return {
           ...node,
@@ -52,34 +50,31 @@ const App = () => {
             value
           }
         };
-      
       })
     );
   };
 
   useEffect(() => {
-    
-
     setNodes([
       {
         id: '1',
         type: 'messageNode',
-        data: { onChange:(event: ChangeEvent<HTMLInputElement>)=>onChange(event.target.value) },      
-        position: { x: 0, y: 50 },        
+        data: { onChange: (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.value) },
+        position: { x: 0, y: 50 }
       },
       {
         id: '2',
         type: 'contractNode',
-        data: { onOutput:onOutput },
+        data: { onOutput: onOutput },
         style: { border: '1px solid #777', padding: 10 },
-        position: { x: 250, y: 50 },        
+        position: { x: 250, y: 50 }
       },
       {
         id: '3',
         type: 'output',
-        data: {  },
-        position: { x: 550, y: 250 },        
-      },    
+        data: {},
+        position: { x: 550, y: 250 }
+      }
     ]);
 
     setEdges([
@@ -88,14 +83,14 @@ const App = () => {
         source: '1',
         target: '2',
         sourceHandle: 'a',
-        animated: true,        
-      },    
+        animated: true
+      },
       {
         id: 'e2b-4',
         source: '2',
         target: '3',
-        sourceHandle: 'b',        
-        animated: true,        
+        sourceHandle: 'b',
+        animated: true
       }
     ]);
   }, []);
@@ -104,17 +99,18 @@ const App = () => {
 
   return (
     <ReactFlow
+      title={title}
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onNodeClick={onNodeClick}
       onConnect={onConnect}
-      onNodeDragStop={onNodeDragStop}      
+      onNodeDragStop={onNodeDragStop}
       onInit={(reactFlowInstance: ReactFlowInstance) => {
-        onChange(`{"balance":{ "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv" }}`)
+        onChange(`{"balance":{ "address": "orai1hz4kkphvt0smw4wd9uusuxjwkp604u7m4akyzv" }}`);
       }}
-      nodeTypes={nodeTypes}      
+      nodeTypes={nodeTypes}
       snapToGrid={true}
       snapGrid={snapGrid}
       fitView

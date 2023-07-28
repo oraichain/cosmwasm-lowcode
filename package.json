@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@oraichain/common-contracts-sdk": "^1.0.8",
-    "@oraichain/cw-simulate": "^2.8.10",
+    "@oraichain/cw-simulate": "^2.8.28",
     "@oraichain/oraidex-contracts-sdk": "^1.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
